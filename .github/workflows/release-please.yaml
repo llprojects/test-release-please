@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - main
+
+name: release-please
+
+jobs:
+  release-please:
+    permissions:
+      pull-requests: write
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      ## Build a release based on the release-please-config.json file
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          command: manifest
+
+      - run: echo ${{ toJSON(steps.release.outputs) }}
+        if: ${{ steps.release.outputs.release_created }}
